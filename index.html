@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- font-awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+    <title>My Note App</title>
+  </head>
+  <body>
+    <main class="container">
+      <div class="my__notes">
+        <div class="input-box">
+          <div class="info">
+            <input type="text" placeholder="Title" class="note__title" />
+            <textarea
+              name=""
+              id=""
+              cols="10"
+              rows="4"
+              placeholder="Take a note..."
+              class="note"
+            ></textarea>
+          </div>
+          <button id="add__note">Add</button>
+        </div>
+
+        <div class="show___notes">
+          <div class="tab__searchbar">
+            <div class="tab">
+              <button class="all__btn bttn active" data-label="all">All</button>
+              <button class="archive__btn bttn" data-label="archive">
+                Archive
+              </button>
+            </div>
+            <input class="search__input" type="text" placeholder="Search" />
+          </div>
+
+          <div class="notes">
+            <!-- Notes -->
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="App.js"></script>
+  </body>
+</html>
