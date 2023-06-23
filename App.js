@@ -5,6 +5,9 @@ const notesContainer = document.querySelector(".notes");
 const tabBttn = document.querySelectorAll(".bttn");
 const inputEl = document.querySelector(".search__input");
 
+let editFlag = false;
+let editId = "";
+
 const addNotes = () => {
   let notes = localStorage.getItem("notes");
   if (notes === null) {
@@ -18,17 +21,27 @@ const addNotes = () => {
     return;
   }
 
-  const noteObj = {
-    title: title.value,
-    note: note.value,
-  };
+  if (!editFlag) {
+    const noteObj = {
+      title: title.value,
+      note: note.value,
+    };
 
-  notes.push(noteObj);
-  localStorage.setItem("notes", JSON.stringify(notes));
-  showNotes();
+    notes.push(noteObj);
+    localStorage.setItem("notes", JSON.stringify(notes));
+    showNotes();
 
-  title.value = "";
-  note.value = "";
+    title.value = "";
+    note.value = "";
+  } else if (editFlag) {
+    notes[editId].title = title.value;
+    notes[editId].note = note.value;
+    console.log(notes, ";;;");
+    localStorage.setItem("notes", JSON.stringify(notes));
+    showNotes();
+
+    setBackToDefault();
+  }
 };
 
 const showNotes = (data) => {
@@ -63,11 +76,18 @@ const showNotes = (data) => {
 
   notesContainer.innerHTML = notesHTML;
   const deleteBttn = notesContainer.querySelectorAll(".del__btn");
+  const editBttn = notesContainer.querySelectorAll(".edit__btn");
   deleteBttn.forEach((bttn) => {
     bttn.addEventListener("click", (e) => {
       let activeTabe = "all";
       let keyNote = "notes";
       deleteNote(e, activeTabe, keyNote);
+    });
+  });
+
+  editBttn.forEach((bttn) => {
+    bttn.addEventListener("click", (e) => {
+      selectEditNote(e);
     });
   });
 };
@@ -98,6 +118,26 @@ const deleteNote = (e, activeTabe, keyNote) => {
     localStorage.setItem("archive-notes", JSON.stringify(notes));
     showArchiveNotes();
   }
+};
+
+const selectEditNote = (e) => {
+  const value = e.currentTarget.dataset.id;
+  let notes = localStorage.getItem("notes");
+  if (notes === null) {
+    return;
+    ``;
+  } else {
+    notes = JSON.parse(notes);
+  }
+
+  editFlag = true;
+  editId = +e.currentTarget.dataset.id;
+  addNoteBttn.textContent = "Edit";
+
+  let selectedNote = notes?.findIndex((_, i) => i === +value);
+
+  title.value = notes[selectedNote].title;
+  note.value = notes[selectedNote].note;
 };
 
 const showArchiveNotes = () => {
@@ -226,4 +266,11 @@ function restoreNote(e) {
   localStorage.setItem("archive-notes", JSON.stringify(notes));
 
   showArchiveNotes();
+}
+
+function setBackToDefault() {
+  editFlag = false;
+  addNoteBttn.textContent = "Add";
+  title.value = "";
+  note.value = "";
 }
