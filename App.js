@@ -75,7 +75,6 @@ const showNotes = (data) => {
 const deleteNote = (e, activeTabe, keyNote) => {
   const value = e.currentTarget.dataset.id;
 
-  console.log(activeTabe, keyNote);
   // All notes
   let notes = localStorage.getItem(keyNote);
   if (notes === null) {
@@ -96,7 +95,6 @@ const deleteNote = (e, activeTabe, keyNote) => {
 
   if (activeTabe === "archive") {
     notes.splice(value, 1);
-
     localStorage.setItem("archive-notes", JSON.stringify(notes));
     showArchiveNotes();
   }
@@ -114,13 +112,13 @@ const showArchiveNotes = () => {
       ? notes
           .map((item, index) => {
             const { title, note } = item;
-            console.log(title, note);
             return `<div class="note__box">		
                   <div class="note_info">
                   <h2 class="title">${title === "" ? "Note" : title}</h2>
                   <p class="text">${note}</p>
                 </div>
                 <div class="btn__container">
+                <button data-id= ${index} class="restore__btn"> <i class="fa fa-rotate-left"></i></button>
                 <button data-id= ${index} class="del__btn"> <i class="fas fa-trash"></i></button>
               </div>
               </div>`;
@@ -130,12 +128,18 @@ const showArchiveNotes = () => {
 
   notesContainer.innerHTML = notesHTML;
   const deleteBttn = notesContainer.querySelectorAll(".del__btn");
+  const restoreBttn = notesContainer.querySelectorAll(".restore__btn");
   deleteBttn.forEach((bttn) => {
-    console.log(bttn);
     bttn.addEventListener("click", (e) => {
       let activeTabe = "archive";
       let keyNote = "archive-notes";
       deleteNote(e, activeTabe, keyNote);
+    });
+  });
+
+  restoreBttn.forEach((bttn) => {
+    bttn.addEventListener("click", (e) => {
+      restoreNote(e);
     });
   });
 };
@@ -175,7 +179,6 @@ tabBttn.forEach((btn) => {
       showNotes();
     } else if (target === "archive") {
       inputEl.classList.add("hide");
-
       showArchiveNotes();
     }
   });
@@ -196,3 +199,31 @@ inputEl.addEventListener("input", (e) => {
 
   showNotes(data);
 });
+
+function restoreNote(e) {
+  let value = e.currentTarget.dataset.id;
+  // Archive notes
+  let notes = localStorage.getItem("archive-notes");
+  if (notes == null) {
+    return;
+  } else {
+    notes = JSON.parse(notes);
+  }
+
+  //All notes
+  let Allnotes = localStorage.getItem("notes");
+  if (Allnotes == null) {
+    return;
+  } else {
+    Allnotes = JSON.parse(Allnotes);
+  }
+  let noteData = notes.filter((_, i) => i === +value);
+
+  let data = [...Allnotes, ...noteData];
+  localStorage.setItem("notes", JSON.stringify(data));
+
+  notes.splice(value, 1);
+  localStorage.setItem("archive-notes", JSON.stringify(notes));
+
+  showArchiveNotes();
+}

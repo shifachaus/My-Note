@@ -77,7 +77,8 @@ textarea {
 }
 
 .edit__btn,
-.del__btn {
+.del__btn,
+.restore__btn {
   padding: 0.3em 0.6em;
   border: 1px solid #cc4f4f;
   border-radius: 4px;
