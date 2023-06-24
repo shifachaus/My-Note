@@ -4,6 +4,7 @@ const addNoteBttn = document.querySelector("#add__note");
 const notesContainer = document.querySelector(".notes");
 const tabBttn = document.querySelectorAll(".bttn");
 const inputEl = document.querySelector(".search__input");
+const alert = document.querySelector(".alert");
 
 let editFlag = false;
 let editId = "";
@@ -17,7 +18,7 @@ const addNotes = () => {
   }
 
   if (!note.value) {
-    alert("add your note");
+    displayAlert("please enter value", "danger");
     return;
   }
 
@@ -31,6 +32,8 @@ const addNotes = () => {
     localStorage.setItem("notes", JSON.stringify(notes));
     showNotes();
 
+    displayAlert("Note added to the list", "success");
+
     title.value = "";
     note.value = "";
   } else if (editFlag) {
@@ -39,7 +42,7 @@ const addNotes = () => {
     console.log(notes, ";;;");
     localStorage.setItem("notes", JSON.stringify(notes));
     showNotes();
-
+    displayAlert("Note updated", "success");
     setBackToDefault();
   }
 };
@@ -111,12 +114,14 @@ const deleteNote = (e, activeTabe, keyNote) => {
 
     localStorage.setItem("notes", JSON.stringify(notes));
     showNotes();
+    displayAlert("Move to Archive", "danger");
   }
 
   if (activeTabe === "archive") {
     notes.splice(value, 1);
     localStorage.setItem("archive-notes", JSON.stringify(notes));
     showArchiveNotes();
+    displayAlert("Note Removed", "danger");
   }
 };
 
@@ -273,4 +278,14 @@ function setBackToDefault() {
   addNoteBttn.textContent = "Add";
   title.value = "";
   note.value = "";
+}
+
+function displayAlert(text, action) {
+  alert.classList.add("show");
+  alert.textContent = text;
+
+  setTimeout(() => {
+    alert.textContent = "";
+    alert.classList.remove("show");
+  }, 1000);
 }
