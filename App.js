@@ -271,6 +271,7 @@ function restoreNote(e) {
   localStorage.setItem("archive-notes", JSON.stringify(notes));
 
   showArchiveNotes();
+  displayAlert("Move to All ", "danger");
 }
 
 function setBackToDefault() {
